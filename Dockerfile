@@ -35,7 +35,7 @@ RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 # Copy package.json and install Node dependencies
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm install
 
 # Copy application code
 COPY . .
