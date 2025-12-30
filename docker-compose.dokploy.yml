@@ -41,10 +41,8 @@ services:
     volumes:
       - storage_data:/var/www/storage
     depends_on:
-      mysql:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      - mysql
+      - redis
     networks:
       - diagpro-network
     healthcheck:
@@ -69,13 +67,7 @@ services:
       - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf:ro
     networks:
       - diagpro-network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-
+    
   # Redis Cache
   redis:
     image: redis:7-alpine
@@ -86,12 +78,7 @@ services:
       - redis_data:/data
     networks:
       - diagpro-network
-    healthcheck:
-      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-
+    
 volumes:
   mysql_data:
     driver: local
