@@ -76,7 +76,7 @@ RUN apk add --no-cache \
     mysql-client
 
 # Create symlink for php
-RUN ln -s /usr/bin/php83 /usr/bin/php
+RUN rm -f /usr/bin/php && ln -s /usr/bin/php83 /usr/bin/php
 
 # Create a non-root user and group
 RUN addgroup -g 1001 diagpro && \
