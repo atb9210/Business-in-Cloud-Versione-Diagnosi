@@ -1,5 +1,3 @@
-version: '3.8'
-
 # Docker Compose ottimizzato per Dokploy
 # Include: App Laravel + MySQL + Redis in un unico stack
 
