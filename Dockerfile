@@ -1,6 +1,6 @@
 # Multi-stage Dockerfile per Diagpro Laravel App
 # Stage 1: Build dependencies
-FROM php:8.2-fpm-alpine AS builder
+FROM php:8.3-fpm-alpine AS builder
 
 # Install system dependencies
 RUN apk add --no-cache \
@@ -51,32 +51,32 @@ FROM nginx:alpine AS production
 
 # Install PHP-FPM and required extensions
 RUN apk add --no-cache \
-    php82 \
-    php82-fpm \
-    php82-pdo \
-    php82-pdo_mysql \
-    php82-mbstring \
-    php82-exif \
-    php82-pcntl \
-    php82-bcmath \
-    php82-gd \
-    php82-xml \
-    php82-zip \
-    php82-curl \
-    php82-fileinfo \
-    php82-tokenizer \
-    php82-session \
-    php82-ctype \
-    php82-json \
-    php82-openssl \
-    php82-pecl-redis \
-    php82-intl \
+    php83 \
+    php83-fpm \
+    php83-pdo \
+    php83-pdo_mysql \
+    php83-mbstring \
+    php83-exif \
+    php83-pcntl \
+    php83-bcmath \
+    php83-gd \
+    php83-xml \
+    php83-zip \
+    php83-curl \
+    php83-fileinfo \
+    php83-tokenizer \
+    php83-session \
+    php83-ctype \
+    php83-json \
+    php83-openssl \
+    php83-pecl-redis \
+    php83-intl \
     supervisor \
     curl \
     mysql-client
 
 # Create symlink for php
-RUN ln -s /usr/bin/php82 /usr/bin/php
+RUN ln -s /usr/bin/php83 /usr/bin/php
 
 # Create a non-root user and group
 RUN addgroup -g 1001 diagpro && \
@@ -93,8 +93,8 @@ COPY docker/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 
 # Copy PHP-FPM configuration
-COPY docker/php/php-fpm.conf /etc/php82/php-fpm.conf
-COPY docker/php/www.conf /etc/php82/php-fpm.d/www.conf
+COPY docker/php/php-fpm.conf /etc/php83/php-fpm.conf
+COPY docker/php/www.conf /etc/php83/php-fpm.d/www.conf
 
 # Copy Supervisor configuration
 COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf

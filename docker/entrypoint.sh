@@ -46,9 +46,9 @@ chmod -R 775 /var/www/storage
 chmod -R 775 /var/www/bootstrap/cache
 
 # Create required directories
-mkdir -p /var/lib/php82/sessions
-chown -R nginx:nginx /var/lib/php82/sessions
-chmod 755 /var/lib/php82/sessions
+mkdir -p /var/lib/php83/sessions
+chown -R nginx:nginx /var/lib/php83/sessions
+chmod 755 /var/lib/php83/sessions
 
 # Create log directories
 mkdir -p /var/log/supervisor
