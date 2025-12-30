@@ -13,11 +13,12 @@ echo "${GREEN}🚀 Starting Diagpro Laravel Application...${NC}"
 echo "${YELLOW}⏳ Waiting for database connection...${NC}"
 MAX_TRIES=30
 TRIES=0
-until php artisan migrate:status > /dev/null 2>&1; do
+until php -r "new PDO('mysql:host=${DB_HOST:-mysql};port=${DB_PORT:-3306}', '${DB_USERNAME:-diagpro}', '${DB_PASSWORD}');" 2>/dev/null; do
     TRIES=$((TRIES + 1))
     if [ $TRIES -ge $MAX_TRIES ]; then
         echo "${RED}❌ Database connection timeout after $MAX_TRIES attempts${NC}"
-        exit 1
+        echo "${YELLOW}Trying to continue anyway...${NC}"
+        break
     fi
     echo "${YELLOW}⏳ Database not ready, waiting 5 seconds... (attempt $TRIES/$MAX_TRIES)${NC}"
     sleep 5
@@ -27,11 +28,12 @@ echo "${GREEN}✅ Database connection established${NC}"
 # Wait for Redis to be ready
 echo "${YELLOW}⏳ Waiting for Redis connection...${NC}"
 TRIES=0
-until php artisan tinker --execute="Redis::ping()" > /dev/null 2>&1; do
+until php -r "new Redis()->connect('${REDIS_HOST:-redis}', ${REDIS_PORT:-6379});" 2>/dev/null; do
     TRIES=$((TRIES + 1))
     if [ $TRIES -ge $MAX_TRIES ]; then
         echo "${RED}❌ Redis connection timeout after $MAX_TRIES attempts${NC}"
-        exit 1
+        echo "${YELLOW}Trying to continue anyway...${NC}"
+        break
     fi
     echo "${YELLOW}⏳ Redis not ready, waiting 3 seconds... (attempt $TRIES/$MAX_TRIES)${NC}"
     sleep 3
