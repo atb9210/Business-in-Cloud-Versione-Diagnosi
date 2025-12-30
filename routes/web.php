@@ -1,12 +1,40 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 use App\Http\Controllers\OrdiniController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\OpenAIExampleController;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+// Health check endpoint for Docker/Kubernetes
+Route::get('/health', function () {
+    try {
+        // Check database connection
+        DB::connection()->getPdo();
+        
+        // Check Redis connection
+        Redis::ping();
+        
+        return response()->json([
+            'status' => 'healthy',
+            'timestamp' => now()->toIso8601String(),
+            'services' => [
+                'database' => 'ok',
+                'redis' => 'ok',
+            ]
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'unhealthy',
+            'timestamp' => now()->toIso8601String(),
+            'error' => $e->getMessage()
+        ], 503);
+    }
 });
 
 // Rotte Mini Shop (pubbliche, senza autenticazione)

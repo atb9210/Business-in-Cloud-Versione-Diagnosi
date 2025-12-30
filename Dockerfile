@@ -68,7 +68,10 @@ RUN apk add --no-cache \
     php82-ctype \
     php82-json \
     php82-openssl \
+    php82-pecl-redis \
+    php82-intl \
     supervisor \
+    curl \
     mysql-client
 
 # Create symlink for php
@@ -84,14 +87,6 @@ COPY --from=builder /var/www /var/www
 # Set working directory
 WORKDIR /var/www
 
-# Set proper permissions
-RUN chown -R diagpro:diagpro /var/www \
-    && chmod -R 755 /var/www/storage \
-    && chmod -R 755 /var/www/bootstrap/cache
-
-# Switch to non-root user
-USER diagpro
-
 # Copy Nginx configuration
 COPY docker/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
@@ -106,6 +101,11 @@ COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # Copy entrypoint script
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
+
+# Set proper permissions
+RUN chown -R diagpro:diagpro /var/www \
+    && chmod -R 755 /var/www/storage \
+    && chmod -R 755 /var/www/bootstrap/cache
 
 # Expose port
 EXPOSE 80

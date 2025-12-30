@@ -23,6 +23,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-diagpro_redis_2024}
       - CACHE_STORE=redis
       - SESSION_DRIVER=redis
       - QUEUE_CONNECTION=redis
@@ -95,6 +96,7 @@ services:
     command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
     environment:
       - APP_ENV=production
+      - APP_KEY=${APP_KEY}
       - DB_CONNECTION=mysql
       - DB_HOST=mysql
       - DB_PORT=3306
@@ -103,6 +105,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-diagpro_redis_2024}
       - QUEUE_CONNECTION=redis
     volumes:
       - storage_data:/var/www/storage
@@ -124,12 +127,16 @@ services:
       sh -c "echo '* * * * * cd /var/www && php artisan schedule:run >> /dev/null 2>&1' | crontab - && crond -f"
     environment:
       - APP_ENV=production
+      - APP_KEY=${APP_KEY}
       - DB_CONNECTION=mysql
       - DB_HOST=mysql
       - DB_PORT=3306
       - DB_DATABASE=${DB_DATABASE:-diagpro}
       - DB_USERNAME=${DB_USERNAME:-diagpro}
       - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-diagpro_redis_2024}
     volumes:
       - storage_data:/var/www/storage
     depends_on:
